@@ -62,13 +62,15 @@ const adminRoutes = require('./routes/adminRoutes');
 const studentRoutes = require('./routes/studentRoutes');
 const methodOverride = require('method-override');
 
-// Use routes
-app.use(methodOverride('_method'));
+// Other routes defined above
 app.use('/admin', adminRoutes);
 app.use('/student', studentRoutes);
-app.use('/', generalRoutes);
 app.use('/auth', authRoutes);
 app.use('/user', userRoutes);
+app.use('/', generalRoutes);
+
+
+
 
 // Start the server
 app.listen(PORT, () => {
