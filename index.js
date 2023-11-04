@@ -13,7 +13,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Mongoose connection to MongoDB
-const URI = process.env.MONGODB_URI || 'your_default_local_db_uri';
+const URI = process.env.MONGODB_URI || 'mongodb+srv://robaa40:Lahaja40@cluster0.s4lbjfg.mongodb.net/?retryWrites=true&w=majority';
 
 mongoose.set("strictQuery", false);
 mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true })
