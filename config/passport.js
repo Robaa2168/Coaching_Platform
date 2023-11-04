@@ -34,8 +34,12 @@ module.exports = function(passport) {
   });
 
   passport.deserializeUser((id, done) => {
-    CoachingUser.findById(id, (err, user) => {
-      done(err, user);
-    });
+    CoachingUser.findById(id)
+      .then(user => {
+        done(null, user); // null for the error argument, because there is no error
+      })
+      .catch(err => {
+        done(err, null); // pass the error to done
+      });
   });
-};
+  
