@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .border-dotted {
+            border-style: dotted;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white px-6 py-4 shadow">
+        <div class="flex justify-between">
+            <a class="text-xl text-gray-700" href="#">MentorMeU</a>
+            <div class="hidden md:flex space-x-4">
+                <a class="px-3 py-2 rounded text-gray-700 hover:bg-gray-200 transition-colors" href="/auth/login">Login</a>
+                <a class="px-3 py-2 rounded text-gray-700 hover:bg-gray-200 transition-colors" href="/auth/signup">Sign Up</a>
+            </div>
+            <div class="md:hidden">
+                <button type="button" class="text-gray-500 focus:outline-none focus:text-gray-600">
+                    <svg viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6">
+                        <!-- SVG for hamburger icon -->
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+<div class="mt-10 sm:mt-20">
+    <div class="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-md">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-8">About Us</h1>
+        <p class="text-lg text-gray-600 leading-relaxed mb-6">Welcome to our Coaching Platform, a place where students can connect with mentors and coaches to prepare for their career development.</p>
+        <p class="text-lg text-gray-600 leading-relaxed mb-4">Our platform offers a range of services including:</p>
+        <ul class="list-disc list-inside mb-6 space-y-2">
+            <li class="text-gray-600">Career Advice</li>
+            <li class="text-gray-600">Resume Review</li>
+            <li class="text-gray-600">Mock Interviews</li>
+        </ul>
+        <p class="text-lg text-gray-600 leading-relaxed text-center">Get started today to shape your future!</p>
+    </div>
+</div>
+
+    
+    <!-- No scripts are needed for Tailwind CSS itself, but you might want them for other JS behavior -->
+</body>
+</html>
