@@ -8,13 +8,15 @@ const adminController = require('../controllers/adminController');
 router.get('/dashboard', adminController.admin_dashboard);
 
 // Student records management
+;
 router.get('/students', adminController.list_students);
 router.get('/student/new', adminController.new_student);
 router.get('/student/:id', adminController.get_student);
 router.put('/student/:id/update', adminController.update_student);
-router.delete('/student/:id/delete', adminController.delete_student);
+
 router.get('/student/:id/edit', adminController.edit_student_get);
 router.post('/student/add', adminController.create_student);
+router.delete('/students/:id/delete', adminController.delete_student);
 
 // List all mentors
 router.get('/mentors', adminController.list_mentors);
@@ -53,7 +55,8 @@ router.get('/opportunity/:id/edit', adminController.edit_opportunity);
 router.put('/opportunity/:id/update', adminController.update_opportunity);
 
 // Delete a specific mentoring opportunity
-router.delete('/opportunity/:id/delete', adminController.delete_opportunity);
+router.delete('/opportunities/:id/delete', adminController.delete_opportunity);
+
 
 
 

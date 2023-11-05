@@ -124,7 +124,7 @@
     <h1 class="text-2xl font-semibold mb-4 sm:mb-6">Edit Mentor</h1>
 
     {{#mentor}}
-    <form action="/admin/mentor/{{_id}}/update" method="post" class="space-y-4">
+    <form action="/admin/mentor/{{_id}}/update?_method=PUT" method="post" class="space-y-4">
       <input type="hidden" name="_method" value="put">
 
       

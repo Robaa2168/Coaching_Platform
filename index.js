@@ -5,6 +5,7 @@ const mustacheExpress = require('mustache-express');
 require('dotenv').config();
 const passport = require('passport');
 const flash = require('connect-flash');
+const methodOverride = require('method-override');
 
 
 
@@ -53,6 +54,9 @@ app.use(passport.session());
 // Require your passport configuration somewhere here
 require('./config/passport')(passport);
 
+
+app.use(methodOverride('_method'));
+
 // Define routes after initializing flash and passport
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
@@ -60,7 +64,7 @@ const generalRoutes = require('./routes/generalRoutes');
 const isAdmin = require('./middleware/isAdmin');
 const adminRoutes = require('./routes/adminRoutes');
 const studentRoutes = require('./routes/studentRoutes');
-const methodOverride = require('method-override');
+
 
 // Other routes defined above
 app.use('/admin', adminRoutes);

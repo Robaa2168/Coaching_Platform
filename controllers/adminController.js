@@ -103,11 +103,18 @@ exports.update_student = async (req, res) => {
   }
 };
 
+// In your controller file
 exports.delete_student = async (req, res) => {
   try {
     const result = await CoachingUser.findByIdAndDelete(req.params.id);
     console.log('Delete result:', result);
-    req.flash('success', 'Student deleted successfully.');
+    
+    if (result) {
+      req.flash('success', 'Student deleted successfully.');
+    } else {
+      req.flash('info', 'No student found with that ID.');
+    }
+    
     res.redirect('/admin/students');
   } catch (error) {
     console.error('Error deleting student:', error);
@@ -281,8 +288,12 @@ exports.update_mentor = async (req, res) => {
 // Delete a mentor
 exports.delete_mentor = async (req, res) => {
   try {
-    await Mentor.findByIdAndRemove(req.params.id);
-    req.flash('success', 'Mentor deleted successfully.');
+    const result = await Mentor.findByIdAndDelete(req.params.id);
+    if (result) {
+      req.flash('success', 'Mentor deleted successfully.');
+    } else {
+      req.flash('info', 'No mentor found with that ID.');
+    }
     res.redirect('/admin/mentors');
   } catch (error) {
     console.error('Error deleting mentor:', error);
@@ -290,6 +301,7 @@ exports.delete_mentor = async (req, res) => {
     res.redirect('/admin/mentors');
   }
 };
+
 
 
 
@@ -395,11 +407,14 @@ exports.create_opportunity = async (req, res) => {
 };
 
 
-// Delete a mentoring opportunity
 exports.delete_opportunity = async (req, res) => {
   try {
-    await MentoringOpportunity.findByIdAndRemove(req.params.id);
-    req.flash('success', 'Mentoring opportunity deleted successfully.');
+    const result = await MentoringOpportunity.findByIdAndDelete(req.params.id);
+    if (result) {
+      req.flash('success', 'Mentoring opportunity deleted successfully.');
+    } else {
+      req.flash('info', 'No opportunity found with that ID.');
+    }
     res.redirect('/admin/opportunities');
   } catch (error) {
     console.error('Error deleting opportunity:', error);
@@ -407,5 +422,6 @@ exports.delete_opportunity = async (req, res) => {
     res.redirect('/admin/opportunities');
   }
 };
+
 
 module.exports = exports;
