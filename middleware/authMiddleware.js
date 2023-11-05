@@ -14,7 +14,6 @@ function isAdmin(req, res, next) {
   if (req.isAuthenticated() && req.user.role === 'admin') {
     return next();
   }
-  // If not an admin, redirect or send an error
   res.status(403).send('Access Denied: You do not have permission to view this page');
 }
 
@@ -23,7 +22,6 @@ function isStudent(req, res, next) {
   if (req.isAuthenticated() && req.user.role === 'student') {
     return next();
   }
-  // If not a student, redirect or send an error
   res.status(403).send('Access Denied: You do not have permission to view this page');
 }
 

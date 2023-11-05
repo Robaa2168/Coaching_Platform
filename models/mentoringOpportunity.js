@@ -4,7 +4,7 @@ const mentoringOpportunitySchema = new mongoose.Schema({
   category: {
     type: String,
     enum: ['Career_advice', 'Resume_Review', 'Mock_Interview'],
-    required: [true, 'Category is required'],  
+    required: [true, 'Category is required'],
   },
   description: {
     type: String,
@@ -24,6 +24,6 @@ const mentoringOpportunitySchema = new mongoose.Schema({
     enum: ['Open', 'Closed'],
     default: 'Open',
   }
-}, { timestamps: true });  // Adds createdAt and updatedAt fields automatically
+}, { timestamps: true });
 
 module.exports = mongoose.model('MentoringOpportunity', mentoringOpportunitySchema);

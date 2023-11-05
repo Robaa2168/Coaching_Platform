@@ -2,7 +2,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcryptjs');
 const CoachingUser = require('../models/coachingUser'); // Adjust the path as necessary
 
-module.exports = function(passport) {
+module.exports = function (passport) {
   passport.use(
     new LocalStrategy({ usernameField: 'username' }, (username, password, done) => {
       // Match user
@@ -15,16 +15,16 @@ module.exports = function(passport) {
 
         // Match password
         bcrypt.compare(password, user.password, (err, isMatch) => {
-            console.log('Database password:', user.password);
-            console.log('Entered password hash:', bcrypt.hashSync(password, 10));
-            if (err) throw err;
-            if (isMatch) {
-              return done(null, user);
-            } else {
-              return done(null, false, { message: 'Password incorrect' });
-            }
-          });
-          
+          console.log('Database password:', user.password);
+          console.log('Entered password hash:', bcrypt.hashSync(password, 10));
+          if (err) throw err;
+          if (isMatch) {
+            return done(null, user);
+          } else {
+            return done(null, false, { message: 'Password incorrect' });
+          }
+        });
+
       });
     })
   );
@@ -36,11 +36,11 @@ module.exports = function(passport) {
   passport.deserializeUser((id, done) => {
     CoachingUser.findById(id)
       .then(user => {
-        done(null, user); // null for the error argument, because there is no error
+        done(null, user); 
       })
       .catch(err => {
-        done(err, null); // pass the error to done
+        done(err, null); 
       });
   });
-  
+
 };

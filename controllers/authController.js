@@ -28,7 +28,7 @@ exports.signup_post = async (req, res) => {
             lastName: lastName,
             email: email,
             phoneNumber: phoneNumber,
-            role: 'student' // Default role is student, could be changed during creation or by an admin later
+            role: 'student'
         });
 
         await user.save();
@@ -61,7 +61,6 @@ exports.login_post = (req, res, next) => {
                 req.flash('error', err.message);
                 return next(err);
             }
-            // User is authenticated, now you can check the role and redirect accordingly
             switch (user.role) {
                 case 'admin':
                     return res.redirect('/admin/dashboard');
@@ -69,7 +68,6 @@ exports.login_post = (req, res, next) => {
                     return res.redirect('/student/dashboard');
                 case 'mentor':
                     return res.redirect('/mentor/dashboard');
-                // Add more roles and their redirects as needed
                 default:
                     req.flash('error', 'Role not recognized, contact support.');
                     return res.redirect('/auth/login');
@@ -81,8 +79,8 @@ exports.login_post = (req, res, next) => {
 // Handle logout with a callback
 exports.logout_get = (req, res) => {
     req.logout(function (err) {
-        if (err) { 
-            return next(err); 
+        if (err) {
+            return next(err);
         }
         req.flash('success', 'You are logged out.');
         res.redirect('/');

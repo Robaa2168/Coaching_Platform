@@ -14,7 +14,6 @@ const coachingUserSchema = new mongoose.Schema({
     enum: ['student', 'admin', 'mentor'],
     default: 'student'
   },
-  // For students, keep track of opportunities they're interested in
   opportunities: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'MentoringOpportunity'
