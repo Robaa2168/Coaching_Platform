@@ -4,12 +4,13 @@ const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const CoachingUser = require('../models/coachingUser');
 
-// Display the signup form
+
+
 exports.signup_get = (req, res) => {
     res.render('signup');
 };
 
-// Handle the signup form submission
+
 exports.signup_post = async (req, res) => {
     try {
         const { username, password, firstName, lastName, email, phoneNumber } = req.body;
@@ -40,12 +41,12 @@ exports.signup_post = async (req, res) => {
     }
 };
 
-// Display the login form
+
 exports.login_get = (req, res) => {
     res.render('login');
 };
 
-// Handle the login form submission
+
 exports.login_post = (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if (err) {
@@ -61,6 +62,9 @@ exports.login_post = (req, res, next) => {
                 req.flash('error', err.message);
                 return next(err);
             }
+
+            req.session.user = user;
+
             switch (user.role) {
                 case 'admin':
                     return res.redirect('/admin/dashboard');
@@ -76,14 +80,16 @@ exports.login_post = (req, res, next) => {
     })(req, res, next);
 };
 
-// Handle logout with a callback
+
 exports.logout_get = (req, res) => {
     req.logout(function (err) {
         if (err) {
             return next(err);
         }
-        req.flash('success', 'You are logged out.');
-        res.redirect('/');
+        // Destroy session on logout
+        req.session.destroy(() => {
+            req.flash('success', 'You are logged out.');
+            res.redirect('/');
+        });
     });
 };
-

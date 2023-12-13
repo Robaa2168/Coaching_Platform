@@ -5,7 +5,6 @@ function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
   }
-  // If not authenticated, redirect to the /about page
   res.redirect('/about');
 }
 

@@ -8,13 +8,13 @@ const passport = require('passport');
 
 
 exports.admin_dashboard = (req, res) => {
-  res.render('admin/dashboard');
+  res.render('admin/dashboard',{userFirstName: req.user.firstName});
 };
 
 exports.list_students = async (req, res) => {
   try {
-    const students = await CoachingUser.find({}); // Assuming you store a 'role' in the user model to differentiate students
-    res.render('admin/students', { students });
+    const students = await CoachingUser.find({});
+    res.render('admin/students', { students, userFirstName: req.user.firstName });
   } catch (error) {
     console.error('Error fetching student list: ', error);
     res.status(500).send('Error fetching student list');
@@ -24,15 +24,18 @@ exports.list_students = async (req, res) => {
 exports.get_student = async (req, res) => {
   try {
     const student = await CoachingUser.findById(req.params.id);
-    res.render('admin/student', { student });
+    console.log(student);
+    res.render('admin/student', { student: student, userFirstName: req.user.firstName});
   } catch (error) {
     console.error('Error fetching student details: ', error);
     res.status(500).send('Error fetching student details');
   }
 };
 
+
+
 exports.new_student = (req, res) => {
-  res.render('admin/new_student');
+  res.render('admin/new_student',{userFirstName: req.user.firstName});
 };
 
 exports.create_student = async (req, res) => {
@@ -53,7 +56,7 @@ exports.create_student = async (req, res) => {
       lastName,
       email,
       phoneNumber,
-      role: 'student' // Assuming 'role' field exists in the schema
+      role: 'student'
     });
 
     await user.save();
@@ -66,7 +69,7 @@ exports.create_student = async (req, res) => {
   }
 };
 
-// Display edit student form
+// Displaying edit student form
 exports.edit_student_get = async (req, res) => {
   try {
     const student = await CoachingUser.findById(req.params.id);
@@ -75,8 +78,7 @@ exports.edit_student_get = async (req, res) => {
       return res.redirect('/admin/students');
     }
     console.log(student);
-    // Correct the path here
-    res.render('admin/edit', { student });  // Removed the leading slash
+    res.render('admin/edit', { student, userFirstName: req.user.firstName});
   } catch (error) {
     console.error('Error fetching student for edit: ', error);
     req.flash('error', 'An error occurred while fetching student details.');
@@ -85,7 +87,7 @@ exports.edit_student_get = async (req, res) => {
 };
 
 
-// Update student details
+// Updating student details
 exports.update_student = async (req, res) => {
   try {
     const { username, firstName, lastName, email } = req.body;
@@ -103,7 +105,6 @@ exports.update_student = async (req, res) => {
   }
 };
 
-// In your controller file
 exports.delete_student = async (req, res) => {
   try {
     const result = await CoachingUser.findByIdAndDelete(req.params.id);
@@ -129,7 +130,7 @@ exports.delete_student = async (req, res) => {
 exports.list_mentors = async (req, res) => {
   try {
     const mentors = await Mentor.find();
-    res.render('admin/mentor', { mentors }); // Notice 'mentors' view is used here
+    res.render('admin/mentor', { mentors, userFirstName: req.user.firstName });
   } catch (error) {
     console.error('Error fetching mentors: ', error);
     res.status(500).send('Error fetching mentors');
@@ -139,37 +140,32 @@ exports.list_mentors = async (req, res) => {
 
 
 
-// Display form to add a new mentor
 exports.new_mentor = (req, res) => {
   res.render('admin/new_mentor', {
+    userFirstName: req.user.firstName,
     messages: {
       error: req.flash('error'),
       success: req.flash('success')
     }
   });
-}
+};
 
 
-// Process form and add a new mentor
+
 exports.create_mentor = async (req, res) => {
   const { firstName, lastName, email, phoneNumber, imageUrl, expertise, bio } = req.body;
 
   try {
-    // Check if email is already taken
     const emailExists = await Mentor.findOne({ email: email });
     if (emailExists) {
       req.flash('error', 'Email is already in use.');
       return res.redirect('/admin/mentor/new');
     }
-
-    // Check if phone number is already taken
     const phoneExists = await Mentor.findOne({ phoneNumber: phoneNumber });
     if (phoneExists) {
       req.flash('error', 'Phone number is already in use.');
       return res.redirect('/admin/mentor/new');
     }
-
-    // If email and phone number are unique, proceed to save new mentor
     let mentor = new Mentor({
       firstName,
       lastName,
@@ -196,16 +192,14 @@ exports.create_mentor = async (req, res) => {
 
 
 
-// Display a specific mentor's details
+// Displaying a specific mentor's details
 exports.get_mentor = async (req, res) => {
   try {
     const mentor = await Mentor.findById(req.params.id);
     if (!mentor) {
-      // Handle case where mentor is not found
-      res.render('admin/mentor', { mentor: null });
+      res.render('admin/mentor', { mentor: null, userFirstName: req.user.firstName });
     } else {
-      // Pass the mentor object within an object to the view
-      res.render('admin/mentor_details', { mentor: mentor }); // Make sure to use the correct view name here
+      res.render('admin/mentor_details', { mentor: mentor, userFirstName: req.user.firstName });
     }
   } catch (error) {
     console.error('Error fetching mentor details: ', error);
@@ -214,7 +208,6 @@ exports.get_mentor = async (req, res) => {
 };
 
 
-// Display form to edit a mentor
 exports.edit_mentor_get = async (req, res) => {
   try {
     const mentor = await Mentor.findById(req.params.id);
@@ -222,7 +215,7 @@ exports.edit_mentor_get = async (req, res) => {
       req.flash('error', 'No mentor found with that ID.');
       return res.redirect('/admin/mentors');
     }
-    res.render('admin/edit_mentor', { mentor }); // Ensure the view for this exists
+    res.render('admin/edit_mentor', { mentor, userFirstName: req.user.firstName });
   } catch (error) {
     console.error('Error fetching mentor for edit: ', error);
     req.flash('error', 'An error occurred while fetching mentor details.');
@@ -230,14 +223,10 @@ exports.edit_mentor_get = async (req, res) => {
   }
 };
 
-// Update a mentor's details
+// Updating a mentor's details
 exports.update_mentor = async (req, res) => {
   try {
-    // Extract the updated fields from req.body
     const { firstName, lastName, email, phoneNumber, imageUrl, expertise, bio } = req.body;
-
-    // Before updating, check if the email or phone number is being changed to a value that already exists
-    // You would have to make sure that the unique email/phone number is not the current mentor's
     const mentorToUpdate = await Mentor.findById(req.params.id);
     if (!mentorToUpdate) {
       req.flash('error', 'No mentor found with that ID.');
@@ -259,8 +248,6 @@ exports.update_mentor = async (req, res) => {
         return res.redirect('/admin/mentors');
       }
     }
-
-    // Proceed with updating the mentor
     const updatedMentor = await Mentor.findByIdAndUpdate(
       req.params.id,
       {
@@ -305,14 +292,11 @@ exports.delete_mentor = async (req, res) => {
 
 
 
-// Display all mentoring opportunities
+// Displaying all mentoring opportunities
 exports.display_opportunities = async (req, res) => {
   try {
-    // Retrieve all opportunities from the database
     const opportunities = await MentoringOpportunity.find().populate('mentor');
-
-    // Render the opportunities view with the retrieved opportunities
-    res.render('admin/opportunities', { opportunities });
+    res.render('admin/opportunities', { opportunities, userFirstName: req.user.firstName });
   } catch (error) {
     console.error('Error fetching opportunities:', error);
     req.flash('error', 'An error occurred while fetching the opportunities.');
@@ -320,34 +304,30 @@ exports.display_opportunities = async (req, res) => {
   }
 };
 
-// Edit a mentoring opportunity
+// Editing a mentoring opportunity
 exports.edit_opportunity = async (req, res) => {
   try {
     const { id } = req.params;
     const opportunity = await MentoringOpportunity.findById(id);
-    const mentors = await Mentor.find(); // Fetch the list of mentors from your database
+    const mentors = await Mentor.find();
 
     if (!opportunity) {
       req.flash('error', 'Opportunity not found.');
-      return res.redirect('/admin/opportunities'); // Ensure the path is absolute
+      return res.redirect('/admin/opportunities');
     }
-
-    // Render edit form with opportunity and mentors list
-    res.render('admin/edit_opportunity', { opportunity, mentors });
+    res.render('admin/edit_opportunity', { opportunity, mentors, userFirstName: req.user.firstName });
   } catch (error) {
     console.error('Error fetching opportunity for edit:', error);
     req.flash('error', 'An error occurred while fetching the opportunity for edit.');
-    res.redirect('/admin/opportunities'); // Ensure the path is absolute
+    res.redirect('/admin/opportunities');
   }
 };
 
 
-// Function to display the new opportunity form
 exports.new_opportunity_get = async (req, res) => {
   try {
-    // Render the new opportunity view with any necessary context
     const mentors = await Mentor.find().select('firstName lastName _id').lean();
-    res.render('admin/new_opportunity', { mentors });
+    res.render('admin/new_opportunity', { mentors, userFirstName: req.user.firstName });
   } catch (error) {
     console.error('Error displaying new opportunity form:', error);
     req.flash('error', 'An error occurred while loading the form to add a new opportunity.');
@@ -356,7 +336,6 @@ exports.new_opportunity_get = async (req, res) => {
 };
 
 
-// Update a mentoring opportunity
 exports.update_opportunity = async (req, res) => {
   try {
     const { id } = req.params;

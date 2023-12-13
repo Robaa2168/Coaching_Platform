@@ -85,7 +85,6 @@ exports.joinOpportunity = async (req, res) => {
   }
 };
 
-// Function to leave an opportunity
 exports.leaveOpportunity = async (req, res) => {
   const userId = req.user._id;
   const opportunityId = req.params.opportunityId;
