@@ -8,7 +8,7 @@ const passport = require('passport');
 
 
 exports.admin_dashboard = (req, res) => {
-  res.render('admin/dashboard',{userFirstName: req.user.firstName});
+  res.render('admin/dashboard', { userFirstName: req.user.firstName });
 };
 
 exports.list_students = async (req, res) => {
@@ -25,7 +25,7 @@ exports.get_student = async (req, res) => {
   try {
     const student = await CoachingUser.findById(req.params.id);
     console.log(student);
-    res.render('admin/student', { student: student, userFirstName: req.user.firstName});
+    res.render('admin/student', { student: student, userFirstName: req.user.firstName });
   } catch (error) {
     console.error('Error fetching student details: ', error);
     res.status(500).send('Error fetching student details');
@@ -35,7 +35,7 @@ exports.get_student = async (req, res) => {
 
 
 exports.new_student = (req, res) => {
-  res.render('admin/new_student',{userFirstName: req.user.firstName});
+  res.render('admin/new_student', { userFirstName: req.user.firstName });
 };
 
 exports.create_student = async (req, res) => {
@@ -78,7 +78,7 @@ exports.edit_student_get = async (req, res) => {
       return res.redirect('/admin/students');
     }
     console.log(student);
-    res.render('admin/edit', { student, userFirstName: req.user.firstName});
+    res.render('admin/edit', { student, userFirstName: req.user.firstName });
   } catch (error) {
     console.error('Error fetching student for edit: ', error);
     req.flash('error', 'An error occurred while fetching student details.');
@@ -107,15 +107,22 @@ exports.update_student = async (req, res) => {
 
 exports.delete_student = async (req, res) => {
   try {
-    const result = await CoachingUser.findByIdAndDelete(req.params.id);
-    console.log('Delete result:', result);
-    
-    if (result) {
-      req.flash('success', 'Student deleted successfully.');
+    const user = await CoachingUser.findById(req.params.id);
+
+    if (user && user.role !== 'admin') {
+      const result = await CoachingUser.findByIdAndDelete(req.params.id);
+      console.log('Delete result:', result);
+
+      if (result) {
+        req.flash('success', 'Student deleted successfully.');
+      } else {
+        req.flash('info', 'No student found with that ID.');
+      }
+    } else if (user.role === 'admin') {
+      req.flash('error', 'Cannot delete an admin account.');
     } else {
       req.flash('info', 'No student found with that ID.');
     }
-    
     res.redirect('/admin/students');
   } catch (error) {
     console.error('Error deleting student:', error);
@@ -123,6 +130,7 @@ exports.delete_student = async (req, res) => {
     res.redirect('/admin/students');
   }
 };
+
 
 
 
